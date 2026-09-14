@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public interface BudgetRepository extends JpaRepository<BudgetEntity, UUID> {
     List<BudgetEntity> findByUserIdAndYearAndMonth(UUID userId, int year, int month);
+
     Optional<BudgetEntity> findByUserIdAndCategoryIdAndYearAndMonth(UUID userId, UUID categoryId, int year, int month);
 }
 

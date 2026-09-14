@@ -11,6 +11,7 @@ import java.util.UUID;
 
 public interface ExpenseRepository extends JpaRepository<ExpenseEntity, UUID>, JpaSpecificationExecutor<ExpenseEntity> {
     Optional<ExpenseEntity> findByIdAndUserId(UUID id, UUID userId);
+
     List<ExpenseEntity> findByUserIdAndExpenseDateBetween(UUID userId, LocalDate from, LocalDate to);
 }
 

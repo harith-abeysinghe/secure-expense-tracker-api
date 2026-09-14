@@ -8,6 +8,7 @@ import com.harithabeysinghe.expensetracker.expense.dto.ExpenseResponse;
 import com.harithabeysinghe.expensetracker.expense.entity.ExpenseEntity;
 import com.harithabeysinghe.expensetracker.user.UserService;
 import jakarta.persistence.criteria.Predicate;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,28 +21,26 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ExpenseService {
     private final ExpenseRepository expenses;
     private final UserService users;
     private final CategoryService categories;
 
-    public ExpenseService(ExpenseRepository expenses, UserService users, CategoryService categories) {
-        this.expenses = expenses;
-        this.users = users;
-        this.categories = categories;
-    }
-
     @Transactional(readOnly = true)
     public PageResponse<ExpenseResponse> list(UUID userId, LocalDate from, LocalDate to, UUID categoryId,
-                                               int page, int size) {
-        if (from != null && to != null && from.isAfter(to)) throw new IllegalArgumentException("from must not be after to");
+                                              int page, int size) {
+        if (from != null && to != null && from.isAfter(to))
+            throw new IllegalArgumentException("from must not be after to");
         var pageable = PageRequest.of(Math.max(0, page), Math.clamp(size, 1, 100),
                 Sort.by(Sort.Order.desc("expenseDate"), Sort.Order.desc("createdAt")));
         return PageResponse.from(expenses.findAll(specification(userId, from, to, categoryId), pageable), this::map);
     }
 
     @Transactional(readOnly = true)
-    public ExpenseResponse get(UUID userId, UUID id) { return map(requireOwned(userId, id)); }
+    public ExpenseResponse get(UUID userId, UUID id) {
+        return map(requireOwned(userId, id));
+    }
 
     @Transactional
     public ExpenseResponse create(UUID userId, ExpenseRequest request) {
@@ -60,7 +59,9 @@ public class ExpenseService {
     }
 
     @Transactional
-    public void delete(UUID userId, UUID id) { expenses.delete(requireOwned(userId, id)); }
+    public void delete(UUID userId, UUID id) {
+        expenses.delete(requireOwned(userId, id));
+    }
 
     private ExpenseEntity requireOwned(UUID userId, UUID id) {
         return expenses.findByIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException("Expense not found"));
@@ -87,4 +88,3 @@ public class ExpenseService {
                 expense.getUpdatedAt());
     }
 }
-

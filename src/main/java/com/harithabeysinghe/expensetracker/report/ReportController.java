@@ -4,20 +4,20 @@ import com.harithabeysinghe.expensetracker.auth.CurrentUser;
 import com.harithabeysinghe.expensetracker.common.openapi.StandardApiErrors;
 import com.harithabeysinghe.expensetracker.report.dto.MonthlyReport;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/reports")
 @StandardApiErrors
+@RequiredArgsConstructor
 public class ReportController {
     private final ReportService service;
     private final CurrentUser currentUser;
-
-    public ReportController(ReportService service, CurrentUser currentUser) {
-        this.service = service;
-        this.currentUser = currentUser;
-    }
 
     @GetMapping("/monthly/{year}/{month}")
     @Operation(summary = "Get monthly spending and budget performance")

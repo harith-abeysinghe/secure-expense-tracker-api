@@ -2,6 +2,7 @@ package com.harithabeysinghe.expensetracker.auth;
 
 import com.harithabeysinghe.expensetracker.config.AppProperties;
 import com.harithabeysinghe.expensetracker.user.entity.UserEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -14,14 +15,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
     private final JwtEncoder encoder;
     private final AppProperties properties;
-
-    public JwtService(JwtEncoder encoder, AppProperties properties) {
-        this.encoder = encoder;
-        this.properties = properties;
-    }
 
     public String issue(UserEntity user) {
         var now = Instant.now();
@@ -38,4 +35,3 @@ public class JwtService {
         return encoder.encode(JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims)).getTokenValue();
     }
 }
-

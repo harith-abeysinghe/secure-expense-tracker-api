@@ -4,6 +4,7 @@ import com.harithabeysinghe.expensetracker.auth.AuthService;
 import com.harithabeysinghe.expensetracker.config.AppProperties;
 import com.harithabeysinghe.expensetracker.user.entity.UserEntity;
 import com.harithabeysinghe.expensetracker.user.entity.UserRole;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,16 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Component
+@RequiredArgsConstructor
 public class AdminBootstrap implements ApplicationRunner {
     private final UserRepository users;
     private final PasswordEncoder passwordEncoder;
     private final AppProperties properties;
-
-    public AdminBootstrap(UserRepository users, PasswordEncoder passwordEncoder, AppProperties properties) {
-        this.users = users;
-        this.passwordEncoder = passwordEncoder;
-        this.properties = properties;
-    }
 
     @Override
     @Transactional

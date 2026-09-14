@@ -3,11 +3,19 @@ package com.harithabeysinghe.expensetracker.budget.entity;
 import com.harithabeysinghe.expensetracker.category.entity.CategoryEntity;
 import com.harithabeysinghe.expensetracker.common.entity.AuditableEntity;
 import com.harithabeysinghe.expensetracker.user.entity.UserEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
+@Getter
 @Entity
 @Table(name = "budgets")
 public class BudgetEntity extends AuditableEntity {
@@ -31,7 +39,8 @@ public class BudgetEntity extends AuditableEntity {
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
 
-    protected BudgetEntity() {}
+    protected BudgetEntity() {
+    }
 
     public BudgetEntity(UserEntity user, CategoryEntity category, int year, int month, BigDecimal amount) {
         this.id = UUID.randomUUID();
@@ -42,12 +51,8 @@ public class BudgetEntity extends AuditableEntity {
         this.amount = amount;
     }
 
-    public UUID getId() { return id; }
-    public UserEntity getUser() { return user; }
-    public CategoryEntity getCategory() { return category; }
-    public int getYear() { return year; }
-    public int getMonth() { return month; }
-    public BigDecimal getAmount() { return amount; }
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
 }
 

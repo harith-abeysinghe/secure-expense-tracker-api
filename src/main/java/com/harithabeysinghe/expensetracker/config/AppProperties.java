@@ -30,7 +30,9 @@ public record AppProperties(@Valid Jwt jwt, @Valid Cors cors, @Valid BootstrapAd
         }
     }
 
-    public record Cors(@NotEmpty List<String> allowedOrigins) {}
+    public record Cors(@NotEmpty List<String> allowedOrigins) {
+    }
 
-    public record BootstrapAdmin(String email, String password, String displayName, String currency) {}
+    public record BootstrapAdmin(String email, String password, String displayName, String currency) {
+    }
 }

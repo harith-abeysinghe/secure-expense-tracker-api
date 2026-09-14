@@ -1,10 +1,18 @@
 package com.harithabeysinghe.expensetracker.user.entity;
 
 import com.harithabeysinghe.expensetracker.common.entity.AuditableEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
+@Getter
 @Entity
 @Table(name = "users")
 public class UserEntity extends AuditableEntity {
@@ -27,11 +35,13 @@ public class UserEntity extends AuditableEntity {
     @Column(nullable = false, length = 20)
     private UserRole role;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private UserStatus status;
 
-    protected UserEntity() {}
+    protected UserEntity() {
+    }
 
     public UserEntity(String email, String passwordHash, String displayName, String currency, UserRole role) {
         this.id = UUID.randomUUID();
@@ -43,12 +53,4 @@ public class UserEntity extends AuditableEntity {
         this.status = UserStatus.ACTIVE;
     }
 
-    public UUID getId() { return id; }
-    public String getEmail() { return email; }
-    public String getPasswordHash() { return passwordHash; }
-    public String getDisplayName() { return displayName; }
-    public String getCurrency() { return currency; }
-    public UserRole getRole() { return role; }
-    public UserStatus getStatus() { return status; }
-    public void setStatus(UserStatus status) { this.status = status; }
 }

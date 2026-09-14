@@ -5,6 +5,7 @@ import com.harithabeysinghe.expensetracker.common.error.UnauthorizedException;
 import com.harithabeysinghe.expensetracker.config.AppProperties;
 import com.harithabeysinghe.expensetracker.user.entity.UserEntity;
 import com.harithabeysinghe.expensetracker.user.entity.UserStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,14 +19,19 @@ import java.util.HexFormat;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class RefreshTokenService {
     private final RefreshTokenRepository repository;
     private final AppProperties properties;
     private final SecureRandom secureRandom = new SecureRandom();
 
-    public RefreshTokenService(RefreshTokenRepository repository, AppProperties properties) {
-        this.repository = repository;
-        this.properties = properties;
+    static String hash(String value) {
+        try {
+            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
+                    .digest(value.getBytes(StandardCharsets.UTF_8)));
+        } catch (NoSuchAlgorithmException exception) {
+            throw new IllegalStateException("SHA-256 is unavailable", exception);
+        }
     }
 
     @Transactional
@@ -73,15 +79,6 @@ public class RefreshTokenService {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
 
-    static String hash(String value) {
-        try {
-            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
-                    .digest(value.getBytes(StandardCharsets.UTF_8)));
-        } catch (NoSuchAlgorithmException exception) {
-            throw new IllegalStateException("SHA-256 is unavailable", exception);
-        }
+    public record Rotation(UserEntity user, String refreshToken) {
     }
-
-    public record Rotation(UserEntity user, String refreshToken) {}
 }
-

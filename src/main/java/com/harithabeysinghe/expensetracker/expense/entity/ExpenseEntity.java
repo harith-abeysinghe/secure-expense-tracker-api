@@ -3,12 +3,20 @@ package com.harithabeysinghe.expensetracker.expense.entity;
 import com.harithabeysinghe.expensetracker.category.entity.CategoryEntity;
 import com.harithabeysinghe.expensetracker.common.entity.AuditableEntity;
 import com.harithabeysinghe.expensetracker.user.entity.UserEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Getter
 @Entity
 @Table(name = "expenses")
 public class ExpenseEntity extends AuditableEntity {
@@ -32,7 +40,8 @@ public class ExpenseEntity extends AuditableEntity {
     @Column(length = 500)
     private String description;
 
-    protected ExpenseEntity() {}
+    protected ExpenseEntity() {
+    }
 
     public ExpenseEntity(UserEntity user, CategoryEntity category, BigDecimal amount, LocalDate expenseDate, String description) {
         this.id = UUID.randomUUID();
@@ -47,11 +56,5 @@ public class ExpenseEntity extends AuditableEntity {
         this.description = description;
     }
 
-    public UUID getId() { return id; }
-    public UserEntity getUser() { return user; }
-    public CategoryEntity getCategory() { return category; }
-    public BigDecimal getAmount() { return amount; }
-    public LocalDate getExpenseDate() { return expenseDate; }
-    public String getDescription() { return description; }
 }
 

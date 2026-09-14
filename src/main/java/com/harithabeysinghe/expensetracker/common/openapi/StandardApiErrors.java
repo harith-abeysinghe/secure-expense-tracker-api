@@ -25,5 +25,6 @@ import java.lang.annotation.Target;
         @ApiResponse(responseCode = "409", description = "Request conflicts with existing data",
                 content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
 })
-public @interface StandardApiErrors {}
+public @interface StandardApiErrors {
+}
 

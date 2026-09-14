@@ -5,6 +5,7 @@ import com.harithabeysinghe.expensetracker.common.error.ConflictException;
 import com.harithabeysinghe.expensetracker.common.error.NotFoundException;
 import com.harithabeysinghe.expensetracker.user.dto.UserResponse;
 import com.harithabeysinghe.expensetracker.user.entity.UserStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository users;
 
-    public UserService(UserRepository users) { this.users = users; }
-
     @Transactional(readOnly = true)
-    public UserResponse get(UUID id) { return map(require(id)); }
+    public UserResponse get(UUID id) {
+        return map(require(id));
+    }
 
     @Transactional(readOnly = true)
     public PageResponse<UserResponse> list(int page, int size) {
@@ -46,4 +48,3 @@ public class UserService {
                 user.getRole(), user.getStatus(), user.getCreatedAt());
     }
 }
-

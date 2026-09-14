@@ -2,10 +2,18 @@ package com.harithabeysinghe.expensetracker.category.entity;
 
 import com.harithabeysinghe.expensetracker.common.entity.AuditableEntity;
 import com.harithabeysinghe.expensetracker.user.entity.UserEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
 
 import java.util.UUID;
 
+@Getter
 @Entity
 @Table(name = "categories")
 public class CategoryEntity extends AuditableEntity {
@@ -22,7 +30,8 @@ public class CategoryEntity extends AuditableEntity {
     @Column(nullable = false)
     private boolean archived;
 
-    protected CategoryEntity() {}
+    protected CategoryEntity() {
+    }
 
     public CategoryEntity(UserEntity owner, String name) {
         this.id = UUID.randomUUID();
@@ -30,12 +39,16 @@ public class CategoryEntity extends AuditableEntity {
         this.name = name;
     }
 
-    public UUID getId() { return id; }
-    public UserEntity getOwner() { return owner; }
-    public String getName() { return name; }
-    public boolean isArchived() { return archived; }
-    public boolean isGlobal() { return owner == null; }
-    public void rename(String name) { this.name = name; }
-    public void archive() { this.archived = true; }
+    public boolean isGlobal() {
+        return owner == null;
+    }
+
+    public void rename(String name) {
+        this.name = name;
+    }
+
+    public void archive() {
+        this.archived = true;
+    }
 }
 

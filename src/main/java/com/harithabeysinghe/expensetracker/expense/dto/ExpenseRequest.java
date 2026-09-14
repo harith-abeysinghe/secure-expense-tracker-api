@@ -14,5 +14,6 @@ public record ExpenseRequest(
         @NotNull @DecimalMin(value = "0.00", inclusive = false) @Digits(integer = 17, fraction = 2) BigDecimal amount,
         @NotNull LocalDate expenseDate,
         @Size(max = 500) String description
-) {}
+) {
+}
 

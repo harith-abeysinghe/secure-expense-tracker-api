@@ -1,6 +1,8 @@
 # Secure Expense Tracker API
 
-A portfolio-ready Spring Boot REST API for private expense tracking, monthly category budgets, and spending reports. It demonstrates secure token rotation, tenant isolation, PostgreSQL migrations, role-based administration, Docker delivery, OpenAPI documentation, and automated verification.
+A portfolio-ready Spring Boot REST API for private expense tracking, monthly category budgets, and spending reports. It
+demonstrates secure token rotation, tenant isolation, PostgreSQL migrations, role-based administration, Docker delivery,
+OpenAPI documentation, and automated verification.
 
 ## Stack
 
@@ -13,10 +15,13 @@ A portfolio-ready Spring Boot REST API for private expense tracking, monthly cat
 
 ## Architecture and security
 
-The application is a package-by-feature monolith. Controllers accept validated records, services own transactions and business rules, repositories enforce user-scoped access, and entities never cross the API boundary.
+The application is a package-by-feature monolith. Controllers accept validated records, services own transactions and
+business rules, repositories enforce user-scoped access, and entities never cross the API boundary.
 
-- Access tokens expire after 15 minutes. Refresh tokens expire after 30 days, are stored only as SHA-256 hashes, rotate on use, and revoke their entire family when reuse is detected.
-- Public registration always creates a `USER`. An `ADMIN` is bootstrapped only when both admin environment variables are set.
+- Access tokens expire after 15 minutes. Refresh tokens expire after 30 days, are stored only as SHA-256 hashes, rotate
+  on use, and revoke their entire family when reuse is detected.
+- Public registration always creates a `USER`. An `ADMIN` is bootstrapped only when both admin environment variables are
+  set.
 - Admins can manage account status and global categories. They cannot inspect or mutate private expenses or budgets.
 - A user's currency is fixed at registration; the API does not perform exchange-rate conversion.
 - Referenced categories are archived, preserving historical reports.
@@ -41,7 +46,8 @@ Health: `http://localhost:8080/actuator/health`
 
 Swagger UI: `http://localhost:8080/swagger-ui.html`
 
-To run from Gradle, start PostgreSQL and export `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, and `JWT_SECRET`, then run `./gradlew bootRun` (`gradlew.bat bootRun` on Windows).
+To run from Gradle, start PostgreSQL and export `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, and `JWT_SECRET`, then run
+`./gradlew bootRun` (`gradlew.bat bootRun` on Windows).
 
 ## API overview
 
@@ -90,14 +96,14 @@ curl http://localhost:8080/api/v1/reports/monthly/2026/9 \
 
 ## Configuration
 
-| Variable | Required | Purpose |
-|---|---:|---|
+| Variable                               | Required | Purpose |
+|----------------------------------------|---:|---|
 | `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` | Yes outside Compose defaults | PostgreSQL connection |
-| `JWT_SECRET` | Yes | HS256 key, at least 32 bytes |
-| `JWT_ISSUER`, `JWT_AUDIENCE` | No | Token validation boundaries |
-| `JWT_ACCESS_TTL`, `JWT_REFRESH_TTL` | No | Defaults to `15m` and `30d` |
-| `CORS_ALLOWED_ORIGINS` | No | Comma-separated browser origins |
-| `ADMIN_EMAIL`, `ADMIN_PASSWORD` | No, paired | Idempotent initial admin bootstrap |
+| `JWT_SECRET`                           | Yes | HS256 key, at least 32 bytes |
+| `JWT_ISSUER`, `JWT_AUDIENCE`           | No | Token validation boundaries |
+| `JWT_ACCESS_TTL`, `JWT_REFRESH_TTL`    | No | Defaults to `15m` and `30d` |
+| `CORS_ALLOWED_ORIGINS`                 | No | Comma-separated browser origins |
+| `ADMIN_EMAIL`, `ADMIN_PASSWORD`        | No, paired | Idempotent initial admin bootstrap |
 | `ADMIN_DISPLAY_NAME`, `ADMIN_CURRENCY` | No | Bootstrap admin profile |
 
 Never commit `.env` or real credentials.
@@ -110,4 +116,5 @@ Docker must be available for Testcontainers integration tests.
 ./gradlew clean check
 ```
 
-`check` runs unit and integration tests and enforces at least 85% line and 75% branch coverage over application logic. The HTML report is written to `build/reports/jacoco/test/html/index.html`.
+`check` runs unit and integration tests and enforces at least 85% line and 75% branch coverage over application logic.
+The HTML report is written to `build/reports/jacoco/test/html/index.html`.

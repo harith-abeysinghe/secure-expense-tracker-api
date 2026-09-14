@@ -7,6 +7,7 @@ import com.harithabeysinghe.expensetracker.expense.dto.ExpenseRequest;
 import com.harithabeysinghe.expensetracker.expense.dto.ExpenseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -18,14 +19,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/expenses")
 @StandardApiErrors
+@RequiredArgsConstructor
 public class ExpenseController {
     private final ExpenseService service;
     private final CurrentUser currentUser;
-
-    public ExpenseController(ExpenseService service, CurrentUser currentUser) {
-        this.service = service;
-        this.currentUser = currentUser;
-    }
 
     @GetMapping
     @Operation(summary = "List and filter the authenticated user's expenses")
@@ -41,7 +38,9 @@ public class ExpenseController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get an owned expense")
-    ExpenseResponse get(@PathVariable UUID id, Authentication auth) { return service.get(currentUser.id(auth), id); }
+    ExpenseResponse get(@PathVariable UUID id, Authentication auth) {
+        return service.get(currentUser.id(auth), id);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -59,5 +58,7 @@ public class ExpenseController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete an owned expense")
-    void delete(@PathVariable UUID id, Authentication auth) { service.delete(currentUser.id(auth), id); }
+    void delete(@PathVariable UUID id, Authentication auth) {
+        service.delete(currentUser.id(auth), id);
+    }
 }

@@ -5,6 +5,7 @@ import com.harithabeysinghe.expensetracker.category.entity.CategoryEntity;
 import com.harithabeysinghe.expensetracker.common.error.ConflictException;
 import com.harithabeysinghe.expensetracker.common.error.NotFoundException;
 import com.harithabeysinghe.expensetracker.user.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,14 +13,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categories;
     private final UserService users;
-
-    public CategoryService(CategoryRepository categories, UserService users) {
-        this.categories = categories;
-        this.users = users;
-    }
 
     @Transactional(readOnly = true)
     public List<CategoryResponse> listVisible(UUID userId, boolean includeArchived) {
@@ -96,7 +93,9 @@ public class CategoryService {
         return value.trim().replaceAll("\\s+", " ");
     }
 
-    private ConflictException duplicate() { return new ConflictException("A visible category with this name already exists"); }
+    private ConflictException duplicate() {
+        return new ConflictException("A visible category with this name already exists");
+    }
 
     private CategoryResponse map(CategoryEntity category) {
         return new CategoryResponse(category.getId(), category.getName(), category.isGlobal(), category.isArchived());

@@ -6,6 +6,7 @@ import com.harithabeysinghe.expensetracker.category.dto.CategoryResponse;
 import com.harithabeysinghe.expensetracker.common.openapi.StandardApiErrors;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +17,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/categories")
 @StandardApiErrors
+@RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService service;
     private final CurrentUser currentUser;
-
-    public CategoryController(CategoryService service, CurrentUser currentUser) {
-        this.service = service;
-        this.currentUser = currentUser;
-    }
 
     @GetMapping
     @Operation(summary = "List global and personal categories")
@@ -47,5 +44,7 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Archive a personal category")
-    void archive(@PathVariable UUID id, Authentication auth) { service.archivePersonal(currentUser.id(auth), id); }
+    void archive(@PathVariable UUID id, Authentication auth) {
+        service.archivePersonal(currentUser.id(auth), id);
+    }
 }

@@ -7,24 +7,23 @@ import com.harithabeysinghe.expensetracker.report.dto.BudgetStatus;
 import com.harithabeysinghe.expensetracker.report.dto.CategoryReport;
 import com.harithabeysinghe.expensetracker.report.dto.MonthlyReport;
 import com.harithabeysinghe.expensetracker.user.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ReportService {
     private final ExpenseRepository expenses;
     private final BudgetRepository budgets;
     private final UserService users;
-
-    public ReportService(ExpenseRepository expenses, BudgetRepository budgets, UserService users) {
-        this.expenses = expenses;
-        this.budgets = budgets;
-        this.users = users;
-    }
 
     @Transactional(readOnly = true)
     public MonthlyReport monthly(UUID userId, int year, int month) {
@@ -34,12 +33,12 @@ public class ReportService {
 
         expenses.findByUserIdAndExpenseDateBetween(userId, yearMonth.atDay(1), yearMonth.atEndOfMonth())
                 .forEach(expense -> rows.computeIfAbsent(expense.getCategory().getId(), id ->
-                                new MutableCategory(id, expense.getCategory().getName()))
+                        new MutableCategory(id, expense.getCategory().getName()))
                         .spent = rows.get(expense.getCategory().getId()).spent.add(expense.getAmount()));
 
         budgets.findByUserIdAndYearAndMonth(userId, year, month)
                 .forEach(budget -> rows.computeIfAbsent(budget.getCategory().getId(), id ->
-                                new MutableCategory(id, budget.getCategory().getName()))
+                        new MutableCategory(id, budget.getCategory().getName()))
                         .budget = budget.getAmount());
 
         var categoryReports = rows.values().stream()

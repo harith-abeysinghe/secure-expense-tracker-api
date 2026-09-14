@@ -21,15 +21,20 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ExpenseServiceTest {
-    @Mock ExpenseRepository repository;
-    @Mock UserService users;
-    @Mock CategoryService categories;
+    @Mock
+    ExpenseRepository repository;
+    @Mock
+    UserService users;
+    @Mock
+    CategoryService categories;
     ExpenseService service;
     UserEntity user;
     CategoryEntity category;

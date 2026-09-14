@@ -14,8 +14,14 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Testcontainers
 @SpringBootTest(properties = {
@@ -32,6 +38,10 @@ class ApiIntegrationTest {
             .withDatabaseName("expense_tracker")
             .withUsername("test")
             .withPassword("test");
+    @Autowired
+    MockMvc mvc;
+    @Autowired
+    ObjectMapper json;
 
     @DynamicPropertySource
     static void database(DynamicPropertyRegistry registry) {
@@ -39,9 +49,6 @@ class ApiIntegrationTest {
         registry.add("spring.datasource.username", POSTGRES::getUsername);
         registry.add("spring.datasource.password", POSTGRES::getPassword);
     }
-
-    @Autowired MockMvc mvc;
-    @Autowired ObjectMapper json;
 
     @Test
     void completeUserAndAdminWorkflowEnforcesIsolationAndTokenRotation() throws Exception {
@@ -195,14 +202,21 @@ class ApiIntegrationTest {
         return json.readTree(result.getResponse().getContentAsString());
     }
 
-    private Tokens tokens(JsonNode node) { return new Tokens(node.get("accessToken").asText(), node.get("refreshToken").asText()); }
-    private String bearer(String token) { return "Bearer " + token; }
+    private Tokens tokens(JsonNode node) {
+        return new Tokens(node.get("accessToken").asText(), node.get("refreshToken").asText());
+    }
+
+    private String bearer(String token) {
+        return "Bearer " + token;
+    }
 
     private String findUserId(JsonNode page, String email) {
-        for (var user : page.get("content")) if (email.equals(user.get("email").asText())) return user.get("id").asText();
+        for (var user : page.get("content"))
+            if (email.equals(user.get("email").asText())) return user.get("id").asText();
         throw new AssertionError("User not found: " + email);
     }
 
-    private record Tokens(String access, String refresh) {}
+    private record Tokens(String access, String refresh) {
+    }
 }
 
